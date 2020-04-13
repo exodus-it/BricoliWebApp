@@ -26,22 +26,22 @@ class AuthController extends Controller
         $input = $request->all();  
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input); 
-        $success['token'] =  $user->createToken('AppName')->accessToken;
+        $success['token'] =  $user->createToken('Ionic.v5.App')->accessToken;
 
         return response()->json(['success'=>$success], $this->successStatus); 
     }
   
-    public function login(){ 
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')]))
-        {
-           $user = Auth::user(); 
-           $success['token'] =  $user->createToken('AppName')-> accessToken; 
-
-           return response()->json(['success' => $success], $this-> successStatus); 
+    public function login(Request $request){ 
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password]))
+        { 
+           $user = User::where('email',$request->email)->first();;
+           $success['token'] =  $user->createToken('Ionic.v5.App')->accessToken; 
+            return response()->json(['success' => $success], $this->successStatus);            
         }
         else
-        { 
-           return response()->json(['error'=>'Unauthorised'], 401); 
+        {
+           $message = "email or password incorrect";
+           return response()->json(['error'=>$message], 400); 
         } 
     }
   

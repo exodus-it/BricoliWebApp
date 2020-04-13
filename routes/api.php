@@ -24,3 +24,4 @@ Route::prefix('user')->group(function(){
  Route::post('getUser', 'Api\AuthController@getUser');
  });
 });
+//Auth::routes();
